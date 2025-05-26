@@ -1,0 +1,28 @@
+name: Deploy to Kubernetes
+
+on:
+  workflow_dispatch: # optional: allows manual deploy trigger
+# OR
+# on:
+#   workflow_run:
+#     workflows: ["Build & Push Docker Image"]
+#     types:
+#       - completed
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout deployment manifests
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > ~/.kube/config
+
+      - name: Deploy to K8s
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
