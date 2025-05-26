@@ -1,0 +1,8 @@
+# .github/actions/checkout/action.yml
+name: 'Checkout'
+description: 'Checkout source code'
+inputs:
+  ...
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
